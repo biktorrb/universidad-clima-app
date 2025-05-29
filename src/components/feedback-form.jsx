@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { SimpleSelect } from "@/components/ui/select"
 import { CheckCircle2, AlertCircle } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { getCurrentWeather } from "@/lib/weather-api"
@@ -13,16 +14,26 @@ import { getCurrentWeather } from "@/lib/weather-api"
 export default function FeedbackForm() {
   const [submitted, setSubmitted] = useState(false)
   const [impact, setImpact] = useState("")
+  const [career, setCareer] = useState("")
   const [feedback, setFeedback] = useState("")
   const [suggestion, setSuggestion] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [currentWeather, setCurrentWeather] = useState(null)
   const [errors, setErrors] = useState({
     impact: false,
+    career: false,
     feedback: false,
     suggestion: false,
     general: null,
   })
+
+  // Career options
+  const careerOptions = [
+    { value: "ingenieria-sistemas", label: "Ingenieria de Sistemas" },
+    { value: "ingenieria-electrica", label: "Ingenieria Electrica" },
+    { value: "contaduria-publica", label: "Contaduria Publica" },
+    { value: "enfermeria", label: "Enfermeria" },
+  ]
 
   // Fetch current weather when component mounts
   useEffect(() => {
@@ -69,9 +80,13 @@ export default function FeedbackForm() {
       setIsSubmitting(true)
       setErrors((prev) => ({ ...prev, general: null }))
 
+      // Get the career label from the selected value
+      const selectedCareer = careerOptions.find((option) => option.value === career)
+
       // Prepare data for submission
       const feedbackData = {
         impact,
+        career: selectedCareer ? selectedCareer.label : career,
         feedback,
         suggestion,
         timestamp: new Date().toISOString(),
@@ -108,10 +123,12 @@ export default function FeedbackForm() {
   const resetForm = () => {
     setSubmitted(false)
     setImpact("")
+    setCareer("")
     setFeedback("")
     setSuggestion("")
     setErrors({
       impact: false,
+      career: false,
       feedback: false,
       suggestion: false,
       general: null,
@@ -182,11 +199,23 @@ export default function FeedbackForm() {
                 className={`flex items-center space-x-2 border rounded-md p-3 cursor-pointer hover:bg-muted/50 [&:has(:checked)]:bg-muted ${errors.impact ? "border-destructive" : ""}`}
               >
                 <RadioGroupItem value="health" id="health" />
-                <span>Problemas de saludos (Refriado/Golpe de calor/Otros)</span>
+                <span>Problemas de salud (Refriado/Golpe de calor/Otros)</span>
               </Label>
             </RadioGroup>
           </div>
-
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="career">¿Que carrera estudias?</Label>
+              {errors.career && <span className="text-sm text-destructive">Requerido</span>}
+            </div>
+            <SimpleSelect
+              value={career}
+              onValueChange={setCareer}
+              placeholder="Selecciona la Carrera"
+              options={careerOptions}
+              className={errors.career ? "border-destructive" : ""}
+            />
+          </div>
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <Label htmlFor="feedback">Cuentanos mas sobre tu experiencia</Label>
@@ -205,7 +234,7 @@ export default function FeedbackForm() {
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <Label htmlFor="suggestion">¿Tienes alguna recomendación para la universidad?</Label>
-              {errors.suggestion && <span className="text-sm text-destructive">Required</span>}
+              {errors.suggestion && <span className="text-sm text-destructive">Requerido</span>}
             </div>
             <Textarea
               id="suggestion"
@@ -219,13 +248,13 @@ export default function FeedbackForm() {
 
           {currentWeather && (
             <div className="text-xs text-muted-foreground">
-              Current weather: {currentWeather.temperature.toFixed(1)}°C, {currentWeather.condition}
+              Clima Actual: {currentWeather.temperature.toFixed(1)}°C, {currentWeather.condition}
             </div>
           )}
         </CardContent>
         <CardFooter>
           <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? "Enviando..." : "Comentario enviado"}
+            {isSubmitting ? "Enviando..." : "Enviar Comentario"}
           </Button>
         </CardFooter>
       </form>

@@ -5,7 +5,8 @@ import CampusMap from "@/components/campus-map"
 import WeatherAlerts from "@/components/weather-alerts"
 import WeatherRecommendations from "@/components/weather-recommendations"
 import FeedbackWall from "@/components/feedback-wall"
-import FeedbackAdmin from "@/components/admin-feedback"
+import Footer from "@/components/footer"
+import UniversityLogo from "@/components/university-logo"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -13,12 +14,22 @@ import { Skeleton } from "@/components/ui/skeleton"
 export default function Home() {
   return (
     <main className="container mx-auto px-4 py-6">
-      <Card className="mb-6">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-2xl md:text-3xl">Monitor Ambiental - UNEFA Zaraza</CardTitle>
+      <div className="mb-8 py-6">
+        <UniversityLogo className="mb-3" />
+        <p className="text-center text-muted-foreground max-w-2xl mx-auto">
+          Monitoreamos como impacta las condiciones climaticas la experiencia de los estudiantes de la UNEFA Extensión Zaraza.
+        </p>
+      </div>
+      {/* <Card className="mb-6">
+        <CardHeader className="">
+            <img
+              src="/logo.png" // Reemplaza con la ruta a tu imagen
+              alt="Vita"
+              className="w-70 h-60 object-cover"
+          />
           <CardDescription>Monitoreamos el impacto que causan los cambio ambientales en los estudiantes de la UNEFA Zaraza.</CardDescription>
         </CardHeader>
-      </Card>
+      </Card> */}
 
       <Suspense fallback={<Skeleton className="w-full h-[200px] rounded-lg" />}>
         <WeatherAlerts />
@@ -69,6 +80,7 @@ export default function Home() {
           </Card>
         </div>
       </div>
+      <Footer/>
     </main>
   )
 }

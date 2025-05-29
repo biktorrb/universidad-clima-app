@@ -4,7 +4,7 @@ import clientPromise from "@/lib/mongodb"
 export async function GET() {
   try {
     const client = await clientPromise
-    const db = client.db()
+    const db = client.db('universidad-clima')
 
     // Calculate date 7 days ago
     const sevenDaysAgo = new Date()

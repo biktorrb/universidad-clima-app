@@ -1,5 +1,5 @@
-const LATITUDE = 9.3467
-const LONGITUDE = -65.3369
+const LATITUDE = 9.3468229
+const LONGITUDE = -65.3365034
 
 // Helper function to determine weather condition based on WMO codes
 function getWeatherCondition(weatherCode) {
@@ -40,7 +40,7 @@ function getWeatherCondition(weatherCode) {
 export async function getCurrentWeather() {
   try {
     const response = await fetch(
-      `https://api.open-meteo.com/v1/forecast?latitude=${LATITUDE}&longitude=${LONGITUDE}&current=temperature_2m,relative_humidity_2m,precipitation,weather_code,wind_speed_10m&hourly=uv_index&timezone=America%2FNew_York`
+      `https://api.open-meteo.com/v1/forecast?latitude=${LATITUDE}&longitude=${LONGITUDE}&current=temperature_2m,relative_humidity_2m,precipitation,weather_code,wind_speed_10m&hourly=uv_index`
     )
 
     if (!response.ok) {
@@ -69,7 +69,7 @@ export async function getCurrentWeather() {
 export async function getHourlyForecast(hours = 48) {
   try {
     const response = await fetch(
-      `https://api.open-meteo.com/v1/forecast?latitude=${LATITUDE}&longitude=${LONGITUDE}&hourly=temperature_2m,precipitation,weather_code&forecast_hours=${hours}&timezone=America%2FNew_York`,
+      `https://api.open-meteo.com/v1/forecast?latitude=${LATITUDE}&longitude=${LONGITUDE}&hourly=temperature_2m,precipitation,weather_code&forecast_hours=${hours}`,
     )
 
     if (!response.ok) {

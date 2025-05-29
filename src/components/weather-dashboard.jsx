@@ -73,24 +73,24 @@ export default function WeatherDashboard() {
   // Get the weather icon based on condition
   const getWeatherIcon = (condition) => {
     if (condition.includes("Clear") || condition.includes("Sunny")) {
-      return <Sun className="h-5 w-5 text-yellow-500" />
+      return <Sun className="h-5 w-5 text-sun-500" />
     } else if (condition.includes("Rain") || condition.includes("Drizzle")) {
-      return <Droplets className="h-5 w-5 text-blue-500" />
+      return <Droplets className="h-5 w-5 text-rain-500" />
     } else {
-      return <Cloud className="h-5 w-5 text-slate-500" />
+      return <Cloud className="h-5 w-5 text-cloud-500" />
     }
   }
 
   return (
     <div className="space-y-4">
-      <Card>
+      <Card className="border-sky-blue-200 dark:border-sky-blue-900">
         <CardHeader className="pb-2">
           <CardTitle>Clima Actual</CardTitle>
-          <CardDescription>Latitud 9.3503, Altitud 65.3245</CardDescription>
+          <CardDescription>Latitud: 9.3468229 Longitud: -65.3365034</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            <div className="col-span-2 md:col-span-1 flex flex-col items-center justify-center p-4 bg-muted/50 rounded-lg">
+            <div className="col-span-2 md:col-span-1 flex flex-col items-center justify-center p-4 g-sky-blue-50 dark:bg-sky-blue-900/20 rounded-lg">
               <div className="text-5xl font-bold">{weatherData.current.temperature.toFixed(1)}°C</div>
               <div className="flex items-center gap-1 mt-2">
                 {getWeatherIcon(weatherData.current.condition)}

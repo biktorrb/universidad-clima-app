@@ -7,6 +7,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { AlertCircle, Bus, CloudOff, Thermometer, Brain } from "lucide-react"
 import { Skeleton } from "@/components/ui/skeleton"
 import { formatDistanceToNow } from "date-fns"
+import { es } from 'date-fns/locale'; 
 
 export default function FeedbackWall() {
   const [data, setData] = useState({
@@ -21,7 +22,7 @@ export default function FeedbackWall() {
     async function fetchRecentFeedback() {
       try {
         setIsLoading(true)
-        const response = await fetch("/api/feedback/recent")
+        const response = await fetch("/api/feedback/recent/")
 
         if (!response.ok) {
           throw new Error("Fallo al cargar información de comentarios.")
@@ -150,7 +151,7 @@ export default function FeedbackWall() {
                           </span>
                         </div>
                         <div className="text-xs text-muted-foreground">
-                          {formatDistanceToNow(new Date(item.timestamp), { addSuffix: true })}
+                          {formatDistanceToNow(new Date(item.timestamp), { addSuffix: true, locale:es })}
                         </div>
                       </div>
                     </CardHeader>
@@ -158,7 +159,7 @@ export default function FeedbackWall() {
                       <p className="text-sm">{item.feedback}</p>
                       {item.weatherData && (
                         <div className="mt-2 text-xs text-muted-foreground">
-                          Weather: {item.weatherData.temperature.toFixed(1)}°C, {item.weatherData.condition}
+                          Clima: {item.weatherData.temperature.toFixed(1)}°C, {item.weatherData.condition}
                         </div>
                       )}
                     </CardContent>

@@ -20,13 +20,14 @@ export async function POST(request) {
     const data = await request.json()
 
     // Validate required fields
-    if (!data.impact || !data.feedback || !data.suggestion) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
+    if (!data.impact || !data.career || !data.feedback || !data.suggestion) {
+      return NextResponse.json({ error: "Debe llenar todos los campos" }, { status: 400 })
     }
 
     // Save feedback to MongoDB
     const result = await saveFeedback({
       impact: data.impact,
+      career: data.career,
       feedback: data.feedback,
       suggestion: data.suggestion,
       timestamp: data.timestamp || new Date().toISOString(),
@@ -37,13 +38,11 @@ export async function POST(request) {
     // Return success response
     return NextResponse.json({
       success: true,
-      message: "Feedback submitted successfully",
+      message: "¡Se ha enviado tu comentario satisfactoriamente!",
       id: result.id,
     })
   } catch (error) {
-    console.error("Error processing feedback:", error)
-    return NextResponse.json({ error: "Failed to process feedback" }, { status: 500 })
+    console.error("Error procesando tu comentario:", error)
+    return NextResponse.json({ error: "Fallo al enviar tu comentario" }, { status: 500 })
   }
 }
-
-
