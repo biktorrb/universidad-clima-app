@@ -1,4 +1,4 @@
-import { SignJWT, jwtVerify } from "jose"
+import { SignJWT, jwtVerify, type JWTPayload } from "jose" // Added 'type JWTPayload'
 import { cookies } from "next/headers"
 
 const secret = new TextEncoder().encode(process.env.JWT_SECRET || "your-secret-key-here-change-in-production")
@@ -9,7 +9,8 @@ const ADMIN_CREDENTIALS = {
   password: process.env.ADMIN_PASSWORD || "admin123",
 }
 
-export async function createToken(payload) {
+// Corrected: 'payload' now has the JWTPayload type
+export async function createToken(payload: JWTPayload) {
   return await new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
@@ -17,18 +18,19 @@ export async function createToken(payload) {
     .sign(secret)
 }
 
-export async function verifyToken(token) {
+export async function verifyToken(token: string) {
   try {
     const { payload } = await jwtVerify(token, secret)
     return payload
   } catch (error) {
+    console.error("Token verification failed:", error);
     return null
   }
 }
 
 export async function getSession() {
   const cookieStore = cookies()
-  const token = cookieStore.get("admin-token")?.value
+  const token = (await cookieStore).get("admin-token")?.value
 
   if (!token) {
     return null
@@ -37,13 +39,13 @@ export async function getSession() {
   return await verifyToken(token)
 }
 
-export function validateCredentials(username, password) {
+export function validateCredentials(username: string, password: string) {
   return username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password
 }
 
-export async function setAuthCookie(token) {
+export async function setAuthCookie(token: string) {
   const cookieStore = cookies()
-  cookieStore.set("admin-token", token, {
+  ;(await cookieStore).set("admin-token", token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
@@ -53,5 +55,5 @@ export async function setAuthCookie(token) {
 
 export async function clearAuthCookie() {
   const cookieStore = cookies()
-  cookieStore.delete("admin-token")
+  ;(await cookieStore).delete("admin-token")
 }
