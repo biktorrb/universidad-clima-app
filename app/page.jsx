@@ -38,7 +38,7 @@ export default function Home() {
       <div className="grid gap-6 md:grid-cols-3 lg:grid-cols-4 mt-6">
         <div className="md:col-span-2 lg:col-span-3">
           <Tabs defaultValue="dashboard" className="w-full">
-            <TabsList className="grid w-full grid-cols-4">
+            <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 mb-5">
               <TabsTrigger value="dashboard">Panel de Monitoreo</TabsTrigger>
               <TabsTrigger value="map">Map de la universidad</TabsTrigger>
               <TabsTrigger value="feedback">Envia tus comentarios</TabsTrigger>

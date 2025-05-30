@@ -90,22 +90,22 @@ export default function AdminLayout({ children }) {
                     Panel
                   </Button>
                 </Link>
-                <Link href="/admin/feedback">
+                {/* <Link href="/admin/feedback">
                   <Button variant={pathname === "/admin/feedback" ? "default" : "ghost"} size="sm">
                     <MessageSquare className="h-4 w-4 mr-2" />
                     Comentarios
                   </Button>
-                </Link>
+                </Link> */}
               </nav>
             </div>
             <div className="flex items-center space-x-4">
               <div className="text-sm text-muted-foreground">
                 Bienvenido, <span className="font-medium">{user.username}</span>
               </div>
-              <Button variant="outline" size="sm" onClick={handleLogout}>
+              {/* <Button variant="outline" size="sm" onClick={handleLogout}>
                 <LogOut className="h-4 w-4 mr-2" />
                 Logout
-              </Button>
+              </Button> */}
             </div>
           </div>
         </div>

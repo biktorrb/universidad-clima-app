@@ -25,6 +25,7 @@ import {
   Login
 } from "lucide-react"
 import { formatDistanceToNow, format } from "date-fns"
+import { es } from "date-fns/locale"
 
 export default function AdminDashboard() {
   const [user, setUser] = useState(null)
@@ -58,6 +59,21 @@ export default function AdminDashboard() {
     { value: "anxiety", label: "Incremento de ansiedad" },
     { value: "health", label: "Problemas de salud" },
   ]
+
+  const getCommomImpact = () => {
+    switch (Object.entries(statistics.impactBreakdown).sort((a, b) => b[1] - a[1])[0]?.[0] || "N/A") {
+      case "health":
+        return "Problemas de Salud"
+      case "transport":
+        return "Retrasos en el transporte"
+      case "outdoor":
+        return "Actividades en exteriores limitadas"
+      case "anxiety":
+        return "Incremento de ansiedad"
+      default:
+        return "N/A";
+    }
+  }
 
   // Verify authentication on component mount
   useEffect(() => {
@@ -250,7 +266,7 @@ export default function AdminDashboard() {
                 <div className="flex items-center">
                   <Users className="h-8 w-8 text-leaf-600" />
                   <div className="ml-4">
-                    <p className="text-sm font-medium text-muted-foreground">Careers</p>
+                    <p className="text-sm font-medium text-muted-foreground">Carreras</p>
                     <p className="text-2xl font-bold">{Object.keys(statistics.careerBreakdown).length}</p>
                   </div>
                 </div>
@@ -264,7 +280,7 @@ export default function AdminDashboard() {
                   <div className="ml-4">
                     <p className="text-sm font-medium text-muted-foreground">Impacto mas común</p>
                     <p className="text-lg font-bold">
-                      {Object.entries(statistics.impactBreakdown).sort((a, b) => b[1] - a[1])[0]?.[0] || "N/A"}
+                      { getCommomImpact() }
                     </p>
                   </div>
                 </div>
@@ -276,11 +292,11 @@ export default function AdminDashboard() {
                 <div className="flex items-center">
                   <Calendar className="h-8 w-8 text-gray-600" />
                   <div className="ml-4">
-                    <p className="text-sm font-medium text-muted-foreground">Last Updated</p>
+                    <p className="text-sm font-medium text-muted-foreground">Ultima actualización</p>
                     <p className="text-sm font-bold">
                       {feedback.length > 0
-                        ? formatDistanceToNow(new Date(feedback[0].timestamp), { addSuffix: true })
-                        : "No data"}
+                        ? formatDistanceToNow(new Date(feedback[0].timestamp), { addSuffix: true, locale:es })
+                        : "No hay datos"}
                     </p>
                   </div>
                 </div>
@@ -294,7 +310,7 @@ export default function AdminDashboard() {
           <CardHeader>
             <CardTitle className="flex items-center">
               <Filter className="h-5 w-5 mr-2" />
-              Filters
+              Filtros
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -382,7 +398,7 @@ export default function AdminDashboard() {
                           )}
                         </div>
                         <div className="text-right text-sm text-muted-foreground">
-                          <div>{format(new Date(item.timestamp), "PPP")}</div>
+                          <div>{format(new Date(item.timestamp), "PPP", {locale:es})}</div>
                           <div>{format(new Date(item.timestamp), "p")}</div>
                         </div>
                       </div>
@@ -400,9 +416,9 @@ export default function AdminDashboard() {
 
                         {item.weatherData && (
                           <div className="text-xs text-muted-foreground bg-muted/50 p-2 rounded">
-                            Weather at submission: {item.weatherData.temperature.toFixed(1)}°C,{" "}
+                            Clima al momento del comentario: {item.weatherData.temperature.toFixed(1)}°C,{" "}
                             {item.weatherData.condition}
-                            {item.weatherData.humidity && ` • Humidity: ${item.weatherData.humidity.toFixed(0)}%`}
+                            {item.weatherData.humidity && ` • Humedad: ${item.weatherData.humidity.toFixed(0)}%`}
                           </div>
                         )}
                       </div>
