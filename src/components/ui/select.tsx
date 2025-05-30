@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useRef, useEffect, createContext, useContext } from "react"
+import { useState, useRef, useEffect, createContext, useContext, Children, isValidElement, cloneElement } from "react" // Added Children, isValidElement, cloneElement
 import { ChevronDown, Check } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -14,7 +14,6 @@ interface SelectOption {
 }
 
 interface SelectContextType {
-  // CORRECTED: Use React.Dispatch<React.SetStateAction<boolean>> for setIsOpen
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
   onValueChange?: (value: string) => void
   selectedValue?: string
@@ -58,7 +57,7 @@ interface SimpleSelectProps {
 // --- Componentes ---
 
 export function Select({ children, value, onValueChange, ...props }: SelectProps) {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false) // This 'isOpen' is now used by passing it to SelectContent
   const selectRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -77,7 +76,17 @@ export function Select({ children, value, onValueChange, ...props }: SelectProps
   return (
     <SelectContext.Provider value={{ setIsOpen, onValueChange, selectedValue: value }}>
       <div className="relative" ref={selectRef} {...props}>
-        {children}
+        {/*
+          Iterate over children and inject 'isOpen' into SelectContent.
+          This is crucial for the compound component pattern.
+        */}
+        {Children.map(children, child => {
+          if (isValidElement(child) && (child.type as any).name === SelectContent.name) {
+            // Found SelectContent, inject the isOpen prop
+            return cloneElement(child, { isOpen: isOpen } as SelectContentProps);
+          }
+          return child; // Return other children as is (e.g., SelectTrigger)
+        })}
       </div>
     </SelectContext.Provider>
   )
@@ -91,7 +100,6 @@ export function SelectTrigger({ className, children, onClick, ...props }: Select
   }
 
   const handleClick = () => {
-    // This line is now correct because setIsOpen's type allows updater functions
     context.setIsOpen((prev) => !prev)
     onClick?.()
   }
