@@ -2,39 +2,48 @@
 
 import type React from "react"
 
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef, useEffect, createContext, useContext } from "react"
 import { ChevronDown, Check } from "lucide-react"
 import { cn } from "@/lib/utils"
+
+// --- Interfaces ---
 
 interface SelectOption {
   value: string
   label: string
 }
 
+interface SelectContextType {
+  // CORRECTED: Use React.Dispatch<React.SetStateAction<boolean>> for setIsOpen
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
+  onValueChange?: (value: string) => void
+  selectedValue?: string
+}
+
+const SelectContext = createContext<SelectContextType | undefined>(undefined)
+
 interface SelectProps {
+  children?: React.ReactNode
   value?: string
   onValueChange?: (value: string) => void
-  children?: React.ReactNode
 }
 
 interface SelectTriggerProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  placeholder?: string
   children?: React.ReactNode
+  onClick?: () => void
 }
 
 interface SelectValueProps {
-  placeholder?: string
+  children?: React.ReactNode
 }
 
 interface SelectContentProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode
+  isOpen: boolean
 }
 
-// Fix the SelectItemProps interface by omitting the conflicting onSelect property
 interface SelectItemProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "onSelect"> {
   value: string
-  onSelectValue?: (value: string) => void
-  isSelected?: boolean
   children?: React.ReactNode
 }
 
@@ -46,7 +55,9 @@ interface SimpleSelectProps {
   className?: string
 }
 
-export function Select({ value, onValueChange, children, ...props }: SelectProps) {
+// --- Componentes ---
+
+export function Select({ children, value, onValueChange, ...props }: SelectProps) {
   const [isOpen, setIsOpen] = useState(false)
   const selectRef = useRef<HTMLDivElement>(null)
 
@@ -64,13 +75,27 @@ export function Select({ value, onValueChange, children, ...props }: SelectProps
   }, [])
 
   return (
-    <div className="relative" ref={selectRef} {...props}>
-      {children}
-    </div>
+    <SelectContext.Provider value={{ setIsOpen, onValueChange, selectedValue: value }}>
+      <div className="relative" ref={selectRef} {...props}>
+        {children}
+      </div>
+    </SelectContext.Provider>
   )
 }
 
-export function SelectTrigger({ className, children, placeholder, ...props }: SelectTriggerProps) {
+export function SelectTrigger({ className, children, onClick, ...props }: SelectTriggerProps) {
+  const context = useContext(SelectContext)
+
+  if (!context) {
+    throw new Error("SelectTrigger must be used within a Select component")
+  }
+
+  const handleClick = () => {
+    // This line is now correct because setIsOpen's type allows updater functions
+    context.setIsOpen((prev) => !prev)
+    onClick?.()
+  }
+
   return (
     <button
       type="button"
@@ -78,6 +103,7 @@ export function SelectTrigger({ className, children, placeholder, ...props }: Se
         "flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
         className,
       )}
+      onClick={handleClick}
       {...props}
     >
       <span className="block truncate">{children}</span>
@@ -86,11 +112,13 @@ export function SelectTrigger({ className, children, placeholder, ...props }: Se
   )
 }
 
-export function SelectValue({ placeholder }: SelectValueProps) {
-  return <span className="text-muted-foreground">{placeholder}</span>
+export function SelectValue({ children }: SelectValueProps) {
+  return <span className="block truncate">{children}</span>
 }
 
-export function SelectContent({ className, children, ...props }: SelectContentProps) {
+export function SelectContent({ className, children, isOpen, ...props }: SelectContentProps) {
+  if (!isOpen) return null
+
   return (
     <div
       className={cn(
@@ -105,14 +133,27 @@ export function SelectContent({ className, children, ...props }: SelectContentPr
   )
 }
 
-export function SelectItem({ className, children, value, onSelectValue, isSelected, ...props }: SelectItemProps) {
+export function SelectItem({ className, children, value, ...props }: SelectItemProps) {
+  const context = useContext(SelectContext)
+
+  if (!context) {
+    throw new Error("SelectItem must be used within a Select component")
+  }
+
+  const handleClick = () => {
+    context.onValueChange?.(value)
+    context.setIsOpen(false)
+  }
+
+  const isSelected = context.selectedValue === value
+
   return (
     <div
       className={cn(
         "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
         className,
       )}
-      onClick={() => onSelectValue?.(value)}
+      onClick={handleClick}
       {...props}
     >
       <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
@@ -123,7 +164,8 @@ export function SelectItem({ className, children, value, onSelectValue, isSelect
   )
 }
 
-// Complete Select component that combines all parts
+// --- Componente SimpleSelect (componente completo y funcional) ---
+
 export function SimpleSelect({ value, onValueChange, placeholder, options, className, ...props }: SimpleSelectProps) {
   const [isOpen, setIsOpen] = useState(false)
   const selectRef = useRef<HTMLDivElement>(null)
