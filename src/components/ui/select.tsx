@@ -2,7 +2,8 @@
 
 import type React from "react"
 
-import { useState, useRef, useEffect, createContext, useContext, Children, isValidElement, cloneElement } from "react" // Added Children, isValidElement, cloneElement
+// Importaciones actualizadas para incluir Children, isValidElement, cloneElement
+import { useState, useRef, useEffect, createContext, useContext, Children, isValidElement, cloneElement } from "react"
 import { ChevronDown, Check } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -57,7 +58,7 @@ interface SimpleSelectProps {
 // --- Componentes ---
 
 export function Select({ children, value, onValueChange, ...props }: SelectProps) {
-  const [isOpen, setIsOpen] = useState(false) // This 'isOpen' is now used by passing it to SelectContent
+  const [isOpen, setIsOpen] = useState(false)
   const selectRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -76,17 +77,17 @@ export function Select({ children, value, onValueChange, ...props }: SelectProps
   return (
     <SelectContext.Provider value={{ setIsOpen, onValueChange, selectedValue: value }}>
       <div className="relative" ref={selectRef} {...props}>
-        {/*
-          Iterate over children and inject 'isOpen' into SelectContent.
-          This is crucial for the compound component pattern.
-        */}
-        {Children.map(children, child => {
-          if (isValidElement(child) && (child.type as any).name === SelectContent.name) {
-            // Found SelectContent, inject the isOpen prop
-            return cloneElement(child, { isOpen: isOpen } as SelectContentProps);
-          }
-          return child; // Return other children as is (e.g., SelectTrigger)
-        })}
+        {
+          // REVISADO: Se eliminó 'as any' y se usa 'displayName' para identificar SelectContent
+          Children.map(children, child => {
+            // Asegura que child.type no sea una cadena (es decir, no es un elemento HTML nativo)
+            // y que su displayName coincida con el de SelectContent.
+            if (isValidElement(child) && typeof child.type !== 'string' && (child.type as React.FunctionComponent).displayName === SelectContent.displayName) {
+              return cloneElement(child, { isOpen: isOpen } as SelectContentProps);
+            }
+            return child;
+          })
+        }
       </div>
     </SelectContext.Provider>
   )
@@ -140,6 +141,10 @@ export function SelectContent({ className, children, isOpen, ...props }: SelectC
     </div>
   )
 }
+
+// IMPORTANTE: Añade esta línea DESPUÉS de la definición de SelectContent
+SelectContent.displayName = "SelectContent";
+
 
 export function SelectItem({ className, children, value, ...props }: SelectItemProps) {
   const context = useContext(SelectContext)
