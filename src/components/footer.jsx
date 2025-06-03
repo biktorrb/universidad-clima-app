@@ -14,7 +14,7 @@ export default function Footer(){
           {/* Navigation Links Section */}
           <nav className="flex flex-wrap justify-center md:justify-start gap-x-6 gap-y-2 text-sm font-medium">
             <About/>
-            <a href="/admin" className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
+            <a href="/admin/login" className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
               Administrador
             </a>
           </nav>

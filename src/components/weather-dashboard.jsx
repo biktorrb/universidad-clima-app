@@ -28,7 +28,7 @@ export default function WeatherDashboard() {
       try {
         setIsLoading(true)
 
-        // Fetch current weather and hourly forecast in parallel
+        // Obtiene clima actual y pronostico
         const [current, hourly] = await Promise.all([getCurrentWeather(), getHourlyForecast(48)])
 
         setWeatherData({
@@ -47,7 +47,7 @@ export default function WeatherDashboard() {
 
     fetchWeatherData()
 
-    // Refresh data every 30 minutes
+    // Refresca datos cada 30 min
     const intervalId = setInterval(fetchWeatherData, 30 * 60 * 1000)
 
     return () => clearInterval(intervalId)
@@ -70,7 +70,7 @@ export default function WeatherDashboard() {
     )
   }
 
-  // Get the weather icon based on condition
+  // Icono basado en el clima
   const getWeatherIcon = (condition) => {
     if (condition.includes("Clear") || condition.includes("Sunny")) {
       return <Sun className="h-5 w-5 text-sun-500" />

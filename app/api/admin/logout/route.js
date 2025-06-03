@@ -4,10 +4,10 @@ export async function POST() {
   try {
     const response = NextResponse.json({
       success: true,
-      message: "Logout successful",
+      message: "Cierre de sesión exitoso",
     })
 
-    // Clear the auth cookie
+    // Limpia cookie del auth
     response.cookies.delete("admin-token")
 
     return response

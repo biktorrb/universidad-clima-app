@@ -16,13 +16,13 @@ export default function WeatherRecommendations() {
       try {
         setIsLoading(true)
 
-        // Fetch current weather and forecast data
+        // Obtiene clima actual y pronostico
         const [currentWeather, forecast] = await Promise.all([getCurrentWeather(), getHourlyForecast(24)])
 
-        // Generate recommendations based on weather data
+        // Genera recomendaciones basado en el clima actual
         const newRecommendations = []
 
-        // Temperature-based recommendations
+        // Recomendacion basado en temperaturas
         if (currentWeather.temperature > 30) {
           newRecommendations.push({
             id: 1,
@@ -43,7 +43,7 @@ export default function WeatherRecommendations() {
           })
         }
 
-        // Precipitation-based recommendations
+        // Recomendaciones basado en niveles de precipitación
         const maxPrecipitation = Math.max(...forecast.slice(0, 8).map((hour) => hour.precipitation))
         if (maxPrecipitation > 0.5) {
           newRecommendations.push({
@@ -56,7 +56,7 @@ export default function WeatherRecommendations() {
           })
         }
 
-        // UV index-based recommendations
+        // Recomendaciones basado en niveles de UV
         if (currentWeather.uvIndex > 5) {
           newRecommendations.push({
             id: 4,
@@ -68,7 +68,7 @@ export default function WeatherRecommendations() {
           })
         }
 
-        // Wind-based recommendations
+        // Recomendaciones basado en niveles de vientos
         if (currentWeather.windSpeed > 20) {
           newRecommendations.push({
             id: 5,
@@ -80,7 +80,7 @@ export default function WeatherRecommendations() {
           })
         }
 
-        // Humidity-based recommendations
+        // Recomendaciones basado en niveles de humedad
         if (currentWeather.humidity > 80) {
           newRecommendations.push({
             id: 6,
@@ -92,7 +92,7 @@ export default function WeatherRecommendations() {
           })
         }
 
-        // Add a general recommendation if we don't have many specific ones
+        // Agrega una recomendacion general
         if (newRecommendations.length < 2) {
           newRecommendations.push({
             id: 7,
@@ -104,7 +104,7 @@ export default function WeatherRecommendations() {
           })
         }
 
-        // Limit to 3 recommendations
+        // Limita a 3 recomendaciones
         setRecommendations(newRecommendations.slice(0, 3))
         setError(null)
       } catch (err) {
@@ -117,7 +117,7 @@ export default function WeatherRecommendations() {
 
     fetchWeatherAndGenerateRecommendations()
 
-    // Refresh recommendations every 30 minutes
+    // Refresca recomendacion cada 30 min
     const intervalId = setInterval(fetchWeatherAndGenerateRecommendations, 30 * 60 * 1000)
 
     return () => clearInterval(intervalId)

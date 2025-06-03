@@ -1,8 +1,6 @@
 "use client"
 
 import type React from "react"
-
-// Importaciones actualizadas para incluir Children, isValidElement, cloneElement
 import { useState, useRef, useEffect, createContext, useContext, Children, isValidElement, cloneElement } from "react"
 import { ChevronDown, Check } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -78,10 +76,7 @@ export function Select({ children, value, onValueChange, ...props }: SelectProps
     <SelectContext.Provider value={{ setIsOpen, onValueChange, selectedValue: value }}>
       <div className="relative" ref={selectRef} {...props}>
         {
-          // REVISADO: Se eliminó 'as any' y se usa 'displayName' para identificar SelectContent
           Children.map(children, child => {
-            // Asegura que child.type no sea una cadena (es decir, no es un elemento HTML nativo)
-            // y que su displayName coincida con el de SelectContent.
             if (isValidElement(child) && typeof child.type !== 'string' && (child.type as React.FunctionComponent).displayName === SelectContent.displayName) {
               return cloneElement(child, { isOpen: isOpen } as SelectContentProps);
             }
@@ -142,7 +137,6 @@ export function SelectContent({ className, children, isOpen, ...props }: SelectC
   )
 }
 
-// IMPORTANTE: Añade esta línea DESPUÉS de la definición de SelectContent
 SelectContent.displayName = "SelectContent";
 
 
@@ -176,8 +170,6 @@ export function SelectItem({ className, children, value, ...props }: SelectItemP
     </div>
   )
 }
-
-// --- Componente SimpleSelect (componente completo y funcional) ---
 
 export function SimpleSelect({ value, onValueChange, placeholder, options, className, ...props }: SimpleSelectProps) {
   const [isOpen, setIsOpen] = useState(false)

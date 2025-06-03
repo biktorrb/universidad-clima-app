@@ -5,7 +5,6 @@ export async function saveFeedback(feedbackData) {
     const client = await clientPromise
     const db = client.db('universidad-clima')
 
-    // Add a timestamp if not provided
     if (!feedbackData.timestamp) {
       feedbackData.timestamp = new Date().toISOString()
     }
@@ -31,7 +30,7 @@ export async function getAllFeedback() {
     const feedback = await db
       .collection("feedback")
       .find({})
-      .sort({ timestamp: -1 }) // Sort by timestamp descending (newest first)
+      .sort({ timestamp: -1 }) 
       .toArray()
 
     return feedback

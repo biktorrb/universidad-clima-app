@@ -20,17 +20,6 @@ export default function Home() {
           Monitoreamos como impacta las condiciones climaticas la experiencia de los estudiantes de la UNEFA Extensión Zaraza.
         </p>
       </div>
-      {/* <Card className="mb-6">
-        <CardHeader className="">
-            <img
-              src="/logo.png" // Reemplaza con la ruta a tu imagen
-              alt="Vita"
-              className="w-70 h-60 object-cover"
-          />
-          <CardDescription>Monitoreamos el impacto que causan los cambio ambientales en los estudiantes de la UNEFA Zaraza.</CardDescription>
-        </CardHeader>
-      </Card> */}
-
       <Suspense fallback={<Skeleton className="w-full h-[200px] rounded-lg" />}>
         <WeatherAlerts />
       </Suspense>
@@ -62,9 +51,7 @@ export default function Home() {
                 <FeedbackWall />
               </Suspense>
             </TabsContent>
-            {/* <TabsContent value="feedback-admin">
-              <FeedbackAdmin />
-            </TabsContent> */}
+      
           </Tabs>
         </div>
         <div className="md:col-span-1">
@@ -84,39 +71,4 @@ export default function Home() {
     </main>
   )
 }
-
-// function WeatherRecommendations() {
-  // // In a real app, this would be based on actual weather data from Open-Meteo
-  // return (
-    // <div className="space-y-4">
-      {/* <div className="flex items-start gap-2"> */}
-        {/* <div className="bg-yellow-100 p-2 rounded-full"> */}
-          {/* <span className="text-yellow-700">☂️</span> */}
-        {/* </div> */}
-        {/* <div> */}
-          {/* <h3 className="font-medium">Bring an umbrella</h3> */}
-          {/* <p className="text-sm text-muted-foreground">Check the precipitation forecast</p> */}
-        {/* </div> */}
-      {/* </div> */}
-      {/* <div className="flex items-start gap-2"> */}
-        {/* <div className="bg-blue-100 p-2 rounded-full"> */}
-          {/* <span className="text-blue-700">🧥</span> */}
-        {/* </div> */}
-        {/* <div> */}
-          {/* <h3 className="font-medium">Dress appropriately</h3> */}
-          {/* <p className="text-sm text-muted-foreground">Based on current temperature</p> */}
-        {/* </div> */}
-      {/* </div> */}
-      {/* <div className="flex items-start gap-2"> */}
-        {/* <div className="bg-red-100 p-2 rounded-full"> */}
-          {/* <span className="text-red-700">🌞</span> */}
-        {/* </div> */}
-        {/* <div> */}
-          {/* <h3 className="font-medium">Use sun protection</h3> */}
-          {/* <p className="text-sm text-muted-foreground">UV index may be high during the day</p> */}
-        {/* </div> */}
-      {/* </div> */}
-    {/* </div> */}
-  // )
-// }
 

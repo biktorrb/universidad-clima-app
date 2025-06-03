@@ -6,11 +6,11 @@ export async function GET() {
     const client = await clientPromise
     const db = client.db('universidad-clima')
 
-    // Calculate date 7 days ago
+    // Calcula los ultimos 7 dias
     const sevenDaysAgo = new Date()
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
 
-    // Get feedback from the last 7 days
+    // Recupera comentarios de los ultimos 7 dias
     const recentFeedback = await db
       .collection("feedback")
       .find({
@@ -19,7 +19,7 @@ export async function GET() {
       .sort({ timestamp: -1 })
       .toArray()
 
-    // Calculate impact statistics
+    // Calcula estadisticas del impacto
     const impactStats = {
       transport: 0,
       outdoor: 0,

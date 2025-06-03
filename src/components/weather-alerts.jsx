@@ -14,7 +14,7 @@ export default function WeatherAlerts() {
   const dismissAlert = (id) => {
     setAlerts(alerts.filter((alert) => alert.id !== id))
 
-    // Store dismissed alerts in localStorage to prevent them from reappearing
+    // Almacena las alertas minimizadas en localStorage par que no aparezcan
     const dismissedAlerts = JSON.parse(localStorage.getItem("dismissedAlerts") || "[]")
     localStorage.setItem("dismissedAlerts", JSON.stringify([...dismissedAlerts, id]))
   }
@@ -25,7 +25,6 @@ export default function WeatherAlerts() {
         setIsLoading(true)
         const alertsData = await getWeatherAlerts()
 
-        // Filter out previously dismissed alerts
         const dismissedAlerts = JSON.parse(localStorage.getItem("dismissedAlerts") || "[]")
         const filteredAlerts = alertsData.filter((alert) => !dismissedAlerts.includes(alert.id))
 
@@ -41,7 +40,7 @@ export default function WeatherAlerts() {
 
     fetchAlerts()
 
-    // Refresh alerts every hour
+    // Refresca alertas cada hora
     const intervalId = setInterval(fetchAlerts, 60 * 60 * 1000)
 
     return () => clearInterval(intervalId)

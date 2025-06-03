@@ -5,8 +5,8 @@ const secret = new TextEncoder().encode(process.env.JWT_SECRET || "your-secret-k
 
 // Admin credentials (in production, store these securely in database)
 const ADMIN_CREDENTIALS = {
-  username: process.env.ADMIN_USERNAME || "admin",
-  password: process.env.ADMIN_PASSWORD || "admin123",
+  username: process.env.ADMIN_USERNAME,
+  password: process.env.ADMIN_PASSWORD,
 }
 
 // Corrected: 'payload' now has the JWTPayload type

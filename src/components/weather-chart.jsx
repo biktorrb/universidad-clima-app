@@ -12,22 +12,22 @@ export default function WeatherChart({ data, yLabel, color }) {
     const ctx = canvas.getContext("2d")
     if (!ctx) return
 
-    // Clear canvas
+    // Limpia el canva
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-    // Set dimensions
+    // Seteo de dimensiones
     const width = canvas.width
     const height = canvas.height
     const padding = 40
     const chartWidth = width - padding * 2
     const chartHeight = height - padding * 2
 
-    // Find min and max values
+    // Encuentra valor minimo y maximo
     const values = data.map((d) => d.value)
-    const maxValue = Math.max(...values) * 1.1 // Add 10% padding
-    const minValue = Math.min(0, Math.min(...values) * 0.9) // Add 10% padding, but not below zero
+    const maxValue = Math.max(...values) * 1.1 
+    const minValue = Math.min(0, Math.min(...values) * 0.9) 
 
-    // Draw axes
+    // Dibuja ejes
     ctx.beginPath()
     ctx.strokeStyle = "#e2e8f0"
     ctx.moveTo(padding, padding)
@@ -35,7 +35,7 @@ export default function WeatherChart({ data, yLabel, color }) {
     ctx.lineTo(width - padding, height - padding)
     ctx.stroke()
 
-    // Draw y-axis labels
+    // Dibuja label en el eje y
     ctx.fillStyle = "#64748b"
     ctx.font = "12px sans-serif"
     ctx.textAlign = "right"
@@ -47,7 +47,7 @@ export default function WeatherChart({ data, yLabel, color }) {
       const value = maxValue - ((maxValue - minValue) * i) / ySteps
       ctx.fillText(value.toFixed(1), padding - 10, y)
 
-      // Draw horizontal grid lines
+      
       ctx.beginPath()
       ctx.strokeStyle = "#e2e8f0"
       ctx.moveTo(padding, y)
@@ -55,11 +55,11 @@ export default function WeatherChart({ data, yLabel, color }) {
       ctx.stroke()
     }
 
-    // Draw x-axis labels
+    // Dibuja label en el eje x
     ctx.textAlign = "center"
     ctx.textBaseline = "top"
 
-    // Group by date
+    // Agrupa por fecha
     const dateGroups = data.reduce((acc, d) => {
       if (!acc[d.date]) {
         acc[d.date] = []
@@ -68,16 +68,16 @@ export default function WeatherChart({ data, yLabel, color }) {
       return acc
     }, {})
 
-    // Draw date separators and labels
+    // Separadores por fecha
     let currentX = padding
     Object.entries(dateGroups).forEach(([date, points], dateIndex) => {
       const dateWidth = (chartWidth / data.length) * points.length
       const dateMiddle = currentX + dateWidth / 2
 
-      // Draw date label
+      // Etiqueta de fecha
       ctx.fillText(date, dateMiddle, height - padding + 15)
 
-      // Draw date separator (except for the first date)
+      // Separadaroes por fecha
       if (dateIndex > 0) {
         ctx.beginPath()
         ctx.strokeStyle = "#cbd5e1"
@@ -109,7 +109,6 @@ export default function WeatherChart({ data, yLabel, color }) {
 
     ctx.stroke()
 
-    // Draw points
     data.forEach((d, i) => {
       const x = padding + (i * chartWidth) / (data.length - 1)
       const y = padding + chartHeight - ((d.value - minValue) / (maxValue - minValue)) * chartHeight
@@ -126,7 +125,6 @@ export default function WeatherChart({ data, yLabel, color }) {
       ctx.stroke()
     })
 
-    // Draw y-axis label
     ctx.save()
     ctx.translate(15, height / 2)
     ctx.rotate(-Math.PI / 2)

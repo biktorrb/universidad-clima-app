@@ -27,7 +27,7 @@ export default function FeedbackForm() {
     general: null,
   })
 
-  // Career options
+  // Opciones de carrera
   const careerOptions = [
     { value: "ingenieria-sistemas", label: "Ingenieria de Sistemas" },
     { value: "ingenieria-electrica", label: "Ingenieria Electrica" },
@@ -35,7 +35,7 @@ export default function FeedbackForm() {
     { value: "enfermeria", label: "Enfermeria" },
   ]
 
-  // Fetch current weather when component mounts
+  // Obtiene clima actual
   useEffect(() => {
     async function fetchWeather() {
       try {
@@ -60,14 +60,13 @@ export default function FeedbackForm() {
 
     setErrors(newErrors)
 
-    // Return true if no errors (all fields filled)
     return !Object.values(newErrors).some((error) => error === true)
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    // Validate all form fields
+    // Valida todos los campos
     if (!validateForm()) {
       setErrors((prev) => ({
         ...prev,
@@ -80,20 +79,20 @@ export default function FeedbackForm() {
       setIsSubmitting(true)
       setErrors((prev) => ({ ...prev, general: null }))
 
-      // Get the career label from the selected value
+
       const selectedCareer = careerOptions.find((option) => option.value === career)
 
-      // Prepare data for submission
+      // Preparacion de los datos
       const feedbackData = {
         impact,
         career: selectedCareer ? selectedCareer.label : career,
         feedback,
         suggestion,
         timestamp: new Date().toISOString(),
-        weatherData: currentWeather, // Include current weather data
+        weatherData: currentWeather, 
       }
 
-      // Send data to the API
+      // Envio de datos a la api
       const response = await fetch("/api/feedback", {
         method: "POST",
         headers: {
@@ -107,7 +106,7 @@ export default function FeedbackForm() {
         throw new Error(errorData.error || "Error al enviar comentario")
       }
 
-      // Handle successful submission
+      // Manejo de envio de envio exitiso
       setSubmitted(true)
     } catch (err) {
       console.error("Error al enviar comentario:", err)

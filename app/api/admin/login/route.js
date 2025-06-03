@@ -13,14 +13,14 @@ export async function POST(request) {
       return NextResponse.json({ error: "Invalid credentials" }, { status: 401 })
     }
 
-    // Create JWT token
+    // Crea token JWT
     const token = await createToken({
       username,
       role: "admin",
       loginTime: new Date().toISOString(),
     })
 
-    // Create response with token in cookie
+    // rea token JWT en cookie
     const response = NextResponse.json({
       success: true,
       message: "Login successful",

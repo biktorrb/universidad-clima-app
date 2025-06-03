@@ -41,13 +41,13 @@ export default function FeedbackWall() {
 
     fetchRecentFeedback()
 
-    // Refresh data every 5 minutes
+    // Refresaca los datos cada 5 min
     const intervalId = setInterval(fetchRecentFeedback, 5 * 60 * 1000)
 
     return () => clearInterval(intervalId)
   }, [])
 
-  // Get impact icon based on type
+  // Icono basado en el impacto
   const getImpactIcon = (impact) => {
     switch (impact) {
       case "transport":
@@ -63,7 +63,6 @@ export default function FeedbackWall() {
     }
   }
 
-  // Get impact label
   const getImpactLabel = (impact) => {
     switch (impact) {
       case "transport":
@@ -79,7 +78,6 @@ export default function FeedbackWall() {
     }
   }
 
-  // Get impact color
   const getImpactColor = (impact) => {
     switch (impact) {
       case "transport":
@@ -95,7 +93,6 @@ export default function FeedbackWall() {
     }
   }
 
-  // Calculate percentages for the chart
   const calculatePercentage = (value) => {
     if (data.total === 0) return 0
     return (value / data.total) * 100

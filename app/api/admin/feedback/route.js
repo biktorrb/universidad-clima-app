@@ -21,7 +21,7 @@ export async function GET(request) {
     const client = await clientPromise
     const db = client.db('universidad-clima')
 
-    // Build filter query
+    // Filtro de consulta
     const filter = {}
 
     if (career && career !== "all") {
@@ -42,10 +42,10 @@ export async function GET(request) {
       }
     }
 
-    // Get total count for pagination
+    // Obtiene cuenta para paginación
     const totalCount = await db.collection("feedback").countDocuments(filter)
 
-    // Get paginated feedback
+    // Obtiene feedback paginado
     const feedback = await db
       .collection("feedback")
       .find(filter)
@@ -54,7 +54,7 @@ export async function GET(request) {
       .limit(limit)
       .toArray()
 
-    // Get summary statistics
+    // Suma de estadisticas
     const stats = await db
       .collection("feedback")
       .aggregate([
@@ -74,7 +74,7 @@ export async function GET(request) {
       ])
       .toArray()
 
-    // Process career and impact statistics
+    // Procesa estadisticas de carrera e impacto
     const careerStats = {}
     const impactStats = {}
 

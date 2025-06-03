@@ -3,10 +3,10 @@ import { saveFeedback, getAllFeedback } from "@/lib/models/feedback"
 
 export async function GET() {
   try {
-    // Get all feedback from MongoDB
+    // Obtiene todos los comentarios de mongo
     const feedback = await getAllFeedback()
 
-    // Return the feedback data
+    // Regresa todos los datos del comentario
     return NextResponse.json(feedback)
   } catch (error) {
     console.error("Error fetching feedback:", error)
@@ -16,26 +16,26 @@ export async function GET() {
 
 export async function POST(request) {
   try {
-    // Parse the request body
+    // Parse el request
     const data = await request.json()
 
-    // Validate required fields
+    // Valida campos requeridos
     if (!data.impact || !data.career || !data.feedback || !data.suggestion) {
       return NextResponse.json({ error: "Debe llenar todos los campos" }, { status: 400 })
     }
 
-    // Save feedback to MongoDB
+    // Almacena comentario en mongo
     const result = await saveFeedback({
       impact: data.impact,
       career: data.career,
       feedback: data.feedback,
       suggestion: data.suggestion,
       timestamp: data.timestamp || new Date().toISOString(),
-      weatherData: data.weatherData || null, // Optional weather data
+      weatherData: data.weatherData || null, 
       userAgent: request.headers.get("user-agent") || null,
     })
 
-    // Return success response
+    // Regresa respuesta exitosa
     return NextResponse.json({
       success: true,
       message: "¡Se ha enviado tu comentario satisfactoriamente!",
